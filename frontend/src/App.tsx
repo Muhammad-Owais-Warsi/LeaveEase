@@ -1,0 +1,46 @@
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import Home from "./components/home";
+import Application from "./components/leaveApplication";
+import CongratsCard from "./components/success";
+import FacultyAdvisorLogin from "./components/facultyAdvisorLogin";
+import HostelCoordinatorLogin from "./components/hostelCoordinatorLogin";
+import HeadOfDepartmentLogin from "./components/headOfDepartmentLogin";
+import {NextUIProvider} from "@nextui-org/react";
+import { useState } from "react";
+
+
+function App() {
+
+
+  const [isStudentLoggedIn,setIsStudentLoggedIn] = useState<boolean>(false);
+  const [isApplicationSubmitted,setIsApplicationSubmitted] = useState<boolean>(false);
+
+  const updateStatus = () => {
+      setIsStudentLoggedIn(true);
+  }
+
+  const updateApplication = () => {
+    setIsApplicationSubmitted(true);
+  }
+
+
+ 
+
+  return (
+    
+    <NextUIProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Home updateStatus={updateStatus}/>}></Route>
+            <Route path="/leaveApplication" element={ isStudentLoggedIn ? <Application updateApplication={updateApplication}/> : <Navigate to="/" />}></Route>
+            <Route path="/success" element={isApplicationSubmitted ? <CongratsCard/> : <Navigate to="/" />}></Route>
+            <Route path="/facultyAdvisor/login" element={<FacultyAdvisorLogin/>}></Route>
+            <Route path="/hostelCoordinator/login" element={<HostelCoordinatorLogin/>}></Route>
+            <Route path="/headOfDepartment/login" element={<HeadOfDepartmentLogin/>}></Route>
+          </Routes>
+        </BrowserRouter>
+    </NextUIProvider>
+  )
+}
+
+export default App
