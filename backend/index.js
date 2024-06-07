@@ -8,7 +8,6 @@ import { sendApplicationMail } from "./utilities/sendMail.js";
 import dotenv from "dotenv"
 dotenv.config();
 
-app.use(express.static(path.join(__dirname, '../frontend/dist')));
 
 
 const app = express();
@@ -18,6 +17,7 @@ app.use(cors({
 app.use(express.json());
 
 
+app.use(express.static(path.join(__dirname, '../frontend/dist')));
 
 mongoose.connect(process.env.MONGO_URL);
 
