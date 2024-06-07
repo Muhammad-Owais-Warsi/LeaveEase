@@ -6,6 +6,8 @@ import { Status } from "./models/applicationStatusModel.js";
 import { FacultyAdvisor } from "./models/FacultyAdvisorModel.js";
 import { sendApplicationMail } from "./utilities/sendMail.js";
 import dotenv from "dotenv"
+import path from "path"
+import { fileURLToPath } from "url";
 dotenv.config();
 
 
@@ -15,6 +17,9 @@ app.use(cors({
     origin:"https://leaveease-1.onrender.com"
 }));
 app.use(express.json());
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 
 app.use(express.static(path.join(__dirname, '../frontend/dist')));
