@@ -8,6 +8,8 @@ import { sendApplicationMail } from "./utilities/sendMail.js";
 import dotenv from "dotenv"
 dotenv.config();
 
+app.use(express.static(path.join(__dirname, '../frontend/dist')));
+
 
 const app = express();
 app.use(cors({
@@ -19,6 +21,9 @@ app.use(express.json());
 
 mongoose.connect(process.env.MONGO_URL);
 
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/dist', 'index.html'));
+  });
 
 app.post("/student/login",async (req, res) => {
     const { email, registerNumber } = req.body;
