@@ -11,7 +11,7 @@ dotenv.config();
 
 const app = express();
 app.use(cors({
-    origin:"https://leaveease-1.onrender.com/"
+    origin:"https://leaveease-1.onrender.com"
 }));
 app.use(express.json());
 
