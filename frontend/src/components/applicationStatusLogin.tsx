@@ -1,67 +1,82 @@
-import { useState } from "react"
-import { toast } from "sonner";
-import axios from "axios";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast,Toaster } from "sonner";
+import axios from "axios";
+import Nav from "./navbar";
 
 
-type StudenProps = {
-    updateStatus : () => void
+type ApplicationStatusType = {
+    updateApplicationStatus: () => void;
 }
 
-export default function StudentLogin({updateStatus} : StudenProps) {
+type LoggedInDataType = {
+    email:string,
+    registerNumber:string
+}
 
+export default function ApplicationStatusLogin({updateApplicationStatus} : ApplicationStatusType) {
+
+
+
+    const navigate = useNavigate();
 
     const [email, setEmail] = useState<string>("");
     const [registerNumber, setRegisterNumber] = useState<string>("");
 
-    const navigate = useNavigate();
+
 
 
     const submit = async (event: React.FormEvent) => {
-        if(!email || !registerNumber) {
-            toast.warning("Missing");
-            return ;
-        }
         event.preventDefault();
-        toast.promise(login(), {
-            loading: "Submitting",
-            success: (data) => {
-                toast.success("Logged In")
-                setEmail("");
-                setRegisterNumber("");
-                console.log(data);
-                updateStatus();
-                navigate("/leaveApplication")
-                return "Success";
-            },
-            error: (error) => {
-                console.error(error);
-                return 'Error';
-            },
-        })
-    }
-
+    
+        if (!email || !registerNumber) {
+            toast.warning("Missing");
+            return;
+        }
+    
+        try {
+            toast.promise(login(), {
+                loading: "Submitting",
+                success: (response) => {
+                    const data = response.data as LoggedInDataType;
+                    setEmail("");
+                    setRegisterNumber("");
+                    updateApplicationStatus();
+                    const encodedEmail = encodeURIComponent(data.email);
+                    const encodedRegisterNumber = encodeURIComponent(data.registerNumber);
+                    toast.success("Login successful.");
+                    navigate(`/application/status?email=${encodedEmail}&registerNumber=${encodedRegisterNumber}`)
+                    return "Success";
+                },
+                error: (error) => {
+                    console.error(error);
+                    return 'Error';
+                },
+            });
+        } catch (error) {
+            console.error("Submit error:", error);
+            toast.error("Submit failed. Please try again later.");
+        }
+    };
+    
     const login = async () => {
         try {
-            const loggedIn = await axios.post(import.meta.env.VITE_STUDENT_LOGIN, {
+            const loggedIn = await axios.post(import.meta.env.VITE_APPLICATION_STATUS_LOGIN, {
                 email,
                 registerNumber
             });
             return loggedIn;
-        } catch (error) {
-            throw (error)
+        } catch (err) {
+            throw err; // Throw error to be caught by the error handler in submit function
         }
     }
-
-
-
-
-
-
+    
 
 
     return (
         <>
+        <Toaster position="top-center" richColors/>
+            <Nav/>
             <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
                 <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                     <img
@@ -70,7 +85,7 @@ export default function StudentLogin({updateStatus} : StudenProps) {
                         alt="Your Company"
                     />
                     <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900 underline">
-                        Student Login
+                        Track Application
                     </h2>
                 </div>
 
@@ -124,6 +139,5 @@ export default function StudentLogin({updateStatus} : StudenProps) {
                 </div>
             </div>
         </>
-
     )
 }

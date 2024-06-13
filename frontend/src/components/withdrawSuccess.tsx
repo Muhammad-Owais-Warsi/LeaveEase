@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 
 
-const CongratsCard = () => {
+const WithdrawnCard = () => {
 
 
 
@@ -32,20 +32,17 @@ const CongratsCard = () => {
                 </div>
                 <h2 className="text-center text-2xl font-bold mt-4">Congratulations</h2>
                 <p className="text-center text-gray-600 mt-2">
-                    Your Application has been successfully sent
+                    Your Application has been successfully Withdrawn
                 </p>
                 <div className="bg-gray-100 rounded-lg p-4 mt-6">
                     <h3 className="font-semibold">What's Next?</h3>
                     <p className="text-gray-600 mt-2">
-                        Please be patient till you get the confirmation of your application. You can view your application status from below. Reach out to your faculties if any query.
+                        Your application has been successfuly withdrawn. You can submit another leave Application
                     </p>
                 </div>
                 <div className="rounded-lg p-4 mt-4 cursor-pointer flex justify-between">
                     <Button color="primary" variant="ghost" onClick={() => navigate("/")}>
                         Back Home
-                    </Button>
-                    <Button color="primary" variant="solid" onClick={() => navigate("/applicationStatus/login")}>
-                        Track Application
                     </Button>
                 </div>
             </div>
@@ -53,4 +50,4 @@ const CongratsCard = () => {
     );
 };
 
-export default CongratsCard;
+export default WithdrawnCard;

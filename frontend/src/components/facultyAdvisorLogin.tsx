@@ -12,19 +12,27 @@ export default function FacultyAdvisorLogin() {
 
     const [email, setEmail] = useState<string>("");
     const [password, setPassowrd] = useState<string>("");
+    const [department,setDepartment] = useState<string>("");
+    const [section,setSection] = useState<string>("");
 
     const navigate = useNavigate();
 
 
     const submit = async (event: React.FormEvent) => {
         event.preventDefault();
+
+        if(!email || !password || !department ||section) {
+            toast.warning("Missing Fields");
+            return ;
+        }
+
         toast.promise(login(), {
             loading: "Submitting",
             success: (data) => {
                 setEmail("");
                 setPassowrd("");
                 console.log(data);
-                navigate(`/LeaveApplication/${data.data.message}`)
+                navigate(`/LeaveApplication`)
                 return "Success";
             },
             error: (error) => {
@@ -38,7 +46,9 @@ export default function FacultyAdvisorLogin() {
         try {
             const loggedIn = await axios.post("http://localhost:3000/student/login", {
                 email,
-                password
+                password,
+                department,
+                section
             });
             return loggedIn;
         } catch (error) {
@@ -55,7 +65,7 @@ export default function FacultyAdvisorLogin() {
 
     return (
         <>
-            <Nav/>
+            <Nav />
             <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
                 <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                     <img
@@ -64,7 +74,7 @@ export default function FacultyAdvisorLogin() {
                         alt="Your Company"
                     />
                     <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900 underline">
-                            Faculty Advisor Login
+                        Faculty Advisor Login
                     </h2>
                 </div>
 
@@ -102,6 +112,50 @@ export default function FacultyAdvisorLogin() {
                                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                     onChange={(e) => setPassowrd(e.target.value)}
                                 />
+                            </div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="col-span-1">
+                                <label htmlFor="department" className="block text-sm font-medium leading-6 text-gray-900">
+                                    Department
+                                </label>
+                                <div className="mt-2">
+                                    <select
+                                        id="department"
+                                        name="department"
+                                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+                                        onChange={(e) => setDepartment(e.target.value)}
+                                    >
+                                        <option>Cse</option>
+                                        <option>Mechanical</option>
+                                        <option>Medical</option>
+                                        <option>Arts & Architecture</option>
+                                        <option>Information Technology (I.T)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div className="col-span-1">
+                                <label htmlFor="section" className="block text-sm font-medium leading-6 text-gray-900">
+                                    Section
+                                </label>
+                                <div className="mt-2">
+                                    <select
+                                        id="section"
+                                        name="section"
+                                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+                                        onChange={(e) => setSection(e.target.value)}
+                                    >
+                                        <option>A</option>
+                                        <option>B</option>
+                                        <option>C</option>
+                                        <option>D</option>
+                                        <option>E</option>
+                                        <option>F</option>
+                                        <option>G</option>
+                                        <option>H</option>
+                                        <option>I</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
 

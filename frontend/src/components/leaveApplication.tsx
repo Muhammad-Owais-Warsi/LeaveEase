@@ -6,12 +6,13 @@ import ModalBox from './modal';
 import { toast } from 'sonner';
 
 
+
 type ApplicationProps = {
     updateApplication: () => void;
 }
 
 
-export default function Application({updateApplication} : ApplicationProps) {
+export default function Application({ updateApplication }: ApplicationProps) {
 
 
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -43,14 +44,22 @@ export default function Application({updateApplication} : ApplicationProps) {
         if (event.target.files && event.target.files[0]) {
             const file = event.target.files[0];
             const maxSize = 100 * 1024;
-            console.log(file.size)
-            if(file.size > maxSize) {
+            if (file.size > maxSize) {
                 toast.warning("Image should be less than 1MB");
-                return ;
+                return;
             }
-            setImage(URL.createObjectURL(event.target.files[0]));
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                const imageDataUrl = reader.result as string; // Result is already a base64 string
+                console.log(imageDataUrl)
+                setImage(imageDataUrl);
+
+            };
+            reader.readAsDataURL(file); 
+
         }
     };
+
 
     const handleFileChange = () => {
         fileInputRef.current?.click();
@@ -60,11 +69,13 @@ export default function Application({updateApplication} : ApplicationProps) {
         window.location.reload();
     }
 
+    image ? console.log(image) : console.log(1);
+    
 
 
     return (
         <div className="m-10 p-10">
-            <ModalBox isOpen={isOpen} onClose={onClose} FormData={{image,firstName,lastName,email,registerNumber,department,section,year,hostel,roomNumber,postalCode,dateOut,dateIn,reason,studentPhoneNumber,parentPhoneNumber}} updateApplication={updateApplication}/>
+            <ModalBox isOpen={isOpen} onClose={onClose} FormData={{ image, firstName, lastName, email, registerNumber, department, section, year, hostel, roomNumber, postalCode, dateOut, dateIn, reason, studentPhoneNumber, parentPhoneNumber }} updateApplication={updateApplication} />
 
             <form>
                 <div className="space-y-10">

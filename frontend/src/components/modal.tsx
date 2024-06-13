@@ -6,8 +6,9 @@ import { useNavigate } from "react-router-dom";
 
 
 
-type FormDataType = {
-  image: string;
+
+export type FormDataType = {
+  image : string;
   firstName: string;
   lastName: string;
   email: string;
@@ -77,7 +78,7 @@ export default function ModalBox({ isOpen, onClose, FormData, updateApplication 
 
   const submitForm = async () => {
     try {
-        const isSubmit = await axios.post(import.meta.env.VITE_APPLICATION_FORM, {
+        const isSubmit = await axios.post(import.meta.env.VITE_APPLICATION_FORM ,{
             FormData
         });
         return isSubmit;

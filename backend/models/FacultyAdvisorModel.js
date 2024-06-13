@@ -6,6 +6,14 @@ const FacultyAdvisorSchema = new mongoose.Schema({
         type:Schema.Types.ObjectId,
         ref:"Student"
     },
+    department:{
+        type:String,
+        required:true
+    },
+    section:{
+        type:String,
+        required:true,
+    },
     form:{
         image:{
             type:String,

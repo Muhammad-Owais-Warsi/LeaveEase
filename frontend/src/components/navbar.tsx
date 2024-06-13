@@ -16,7 +16,7 @@ export default function Nav({ user }: NavType) {
         {head:"Faculty Advisor", path:"/facultyAdvisor/login"},
         {head:"Hostel Co-ordinator", path:"/hostelCoordinator/login"},
         {head:"Head Of Department (H.O.D)", path:"/headOfDepartment/login"},
-        {head:"View Application", path:""}
+        {head:"View Application", path:"/applicationStatus/login"}
     ];
 
     return (
@@ -57,7 +57,7 @@ export default function Nav({ user }: NavType) {
                 </NavbarItem>
                 {
                     user ? <NavbarItem>
-                        <Link href="#" aria-current="page" className="text-[rgb(255,255,255)] ">
+                        <Link href="/applicationStatus/login" aria-current="page" className="text-[rgb(255,255,255)] ">
                             View Application Status
                         </Link>
                     </NavbarItem> : null
