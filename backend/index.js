@@ -18,7 +18,7 @@ const upload = multer({storage:storage})
 
 
 app.use(cors({
-    origin:"https://leaveease-1.onrender.com/"
+    origin:"https://leaveease-1.onrender.com"
 }));
 
 
