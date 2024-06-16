@@ -32,7 +32,7 @@ export default function FacultyAdvisorLogin({updateFacultyAdvisorLoggedIn}:Facul
 
         toast.promise(login(), {
             loading: "Submitting",
-            success: (data) => {
+            success: () => {
                 setEmail("");
                 setPassowrd("");
                 updateFacultyAdvisorLoggedIn();
@@ -48,7 +48,7 @@ export default function FacultyAdvisorLogin({updateFacultyAdvisorLoggedIn}:Facul
 
     const login = async () => {
         try {
-            const loggedIn = await axios.post("http://localhost:4000/facultyAdvisor/login", {
+            const loggedIn = await axios.post(import.meta.env.VITE_FACULTY_ADVISOR_LOGIN, {
                 email,
                 password,
             });

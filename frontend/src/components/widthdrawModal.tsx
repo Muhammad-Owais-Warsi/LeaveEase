@@ -58,7 +58,7 @@ export default function WidthdrawModalBox({ isOpen, onClose, props}: ModalType) 
 
     const submitForm = async () => {
         try {
-            const isSubmit = await axios.post("http://localhost:4000/application/withdraw", {
+            const isSubmit = await axios.post(import.meta.env.VITE_APPLICATION_STATUS_WITHDRAW, {
 
                 email: props.email,
                 registerNumber: props.registerNumber
