@@ -30,7 +30,7 @@ export default function Applications() {
     if (department && section) {
       const fetchData = async () => {
         try {
-          const result = await axios.post(import.meta.env.VITE_FACULTY__ADVISOR_APPLICATIONS, {
+          const result = await axios.post(import.meta.env.VITE_FACULTY_ADVISOR_APPLICATIONS, {
             department,
             section
           });
