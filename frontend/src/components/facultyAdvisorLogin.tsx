@@ -1,19 +1,23 @@
 import { useState } from "react"
-import { toast } from "sonner";
+import { toast, Toaster } from "sonner";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Nav from "./navbar";
 
 
+type FacultyAdvisorType = {
+    updateFacultyAdvisorLoggedIn: () => void;
+}
 
 
-export default function FacultyAdvisorLogin() {
+
+export default function FacultyAdvisorLogin({updateFacultyAdvisorLoggedIn}:FacultyAdvisorType) {
 
 
     const [email, setEmail] = useState<string>("");
     const [password, setPassowrd] = useState<string>("");
-    const [department,setDepartment] = useState<string>("");
-    const [section,setSection] = useState<string>("");
+    const [department,setDepartment] = useState<string>("Cse");
+    const [section,setSection] = useState<string>("A");
 
     const navigate = useNavigate();
 
@@ -21,7 +25,7 @@ export default function FacultyAdvisorLogin() {
     const submit = async (event: React.FormEvent) => {
         event.preventDefault();
 
-        if(!email || !password || !department ||section) {
+        if(!email || !password || !department || !section) {
             toast.warning("Missing Fields");
             return ;
         }
@@ -31,8 +35,8 @@ export default function FacultyAdvisorLogin() {
             success: (data) => {
                 setEmail("");
                 setPassowrd("");
-                console.log(data);
-                navigate(`/LeaveApplication`)
+                updateFacultyAdvisorLoggedIn();
+                navigate(`/facultyAdvisor/application?department=${department}&section=${section}`)
                 return "Success";
             },
             error: (error) => {
@@ -44,11 +48,9 @@ export default function FacultyAdvisorLogin() {
 
     const login = async () => {
         try {
-            const loggedIn = await axios.post("http://localhost:3000/student/login", {
+            const loggedIn = await axios.post("http://localhost:4000/facultyAdvisor/login", {
                 email,
                 password,
-                department,
-                section
             });
             return loggedIn;
         } catch (error) {
@@ -65,6 +67,7 @@ export default function FacultyAdvisorLogin() {
 
     return (
         <>
+            <Toaster richColors position="top-center"/>
             <Nav />
             <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
                 <div className="sm:mx-auto sm:w-full sm:max-w-sm">

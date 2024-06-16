@@ -17,19 +17,19 @@ const storage = multer.memoryStorage();
 const upload = multer({storage:storage})
 
 
-app.use(cors({
-    origin:"https://leaveease-1.onrender.com"
-}));
+// app.use(cors({
+//     origin:"https://leaveease-1.onrender.com"
+// }));
 
 
-// app.use(cors());
+app.use(cors());
 app.use(express.json({limit:"100mb"}));
 app.use(express.urlencoded({ extended: true }));
 
 
 
-mongoose.connect(process.env.MONGO_URL);
-// mongoose.connect("mongodb://127.0.0.1:27017/development")
+// mongoose.connect(process.env.MONGO_URL);
+mongoose.connect("mongodb://127.0.0.1:27017/development")
 
 
 app.post("/student/login", async (req, res) => {
@@ -172,6 +172,38 @@ app.post("/application/withdraw", async (req, res) => {
     }
 });
 
+
+
+app.post("/facultyAdvisor/login", async (req,res) => {
+
+    try {
+        const {email,password} = req.body;
+
+        if(email === process.env.FACULTY_ADVISOR_EMAIL && password === process.env.FACULTY_ADVISOR_PASSWORD) {
+            res.status(200).json({message:"Success"});
+        } 
+        else {
+            res.status(500).json({message:"Error"})
+        }
+    } catch (error) {
+        res.status(500).json({message:"Error"});
+    }
+
+
+});
+
+
+app.post("/facultyAdvisor/applications", async (req,res) => {
+    const {department,section} = req.body;
+
+    const Users = await FacultyAdvisor.find({department,section})
+
+    if(Users) {
+        res.status(200).json({message:Users});
+    } else {
+        res.status(500).json({message:"Error"})
+    }
+})
 
 
 

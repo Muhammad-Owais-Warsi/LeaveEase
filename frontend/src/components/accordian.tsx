@@ -3,6 +3,7 @@ import { FormDataType } from "./modal";
 import { Button } from "@nextui-org/react";
 import { useDisclosure } from "@nextui-org/react";
 import WidthdrawModalBox from "./widthdrawModal";
+import { Chip } from "@nextui-org/react";
 
 
 type AccordionType = {
@@ -10,7 +11,12 @@ type AccordionType = {
     form: FormDataType;
     updateApplicationWithdrawn:() => void
 };
-const DisplayContent = ({ form }: { form: FormDataType }) => {
+
+
+type DisplayContentType = {
+    form:FormDataType
+}
+function DisplayContent({ form }: DisplayContentType){
     return (
         <div className="p-6 max-w-4xl mx-auto font-sans border border-gray-200 rounded-lg shadow-md">
             <h1 className="text-2xl text-center mb-6 font-bold text-gray-800">Student Leave Application</h1>
@@ -78,7 +84,7 @@ const DisplayContent = ({ form }: { form: FormDataType }) => {
 
 
 
-export default function AccordionBox({ status, form,updateApplicationWithdrawn }: AccordionType){
+function AccordionBox({ status, form,updateApplicationWithdrawn }: AccordionType){
     const { isOpen, onOpen, onClose } = useDisclosure();
 
     return (
@@ -95,9 +101,7 @@ export default function AccordionBox({ status, form,updateApplicationWithdrawn }
                                 <span className="ml-4">{`${form.firstName} ${form.lastName}`}</span>
                             </div>
                             <div className="flex space-x-4 ml-auto">
-                                <Button color="warning" variant="bordered" disabled>
-                                    Pending
-                                </Button>
+                            <Chip color="warning" variant="bordered" className="mt-2">Pending</Chip>
                                 <div className="hidden lg:block">
                                     <Button color="danger" onPress={onOpen}>
                                         Withdraw Application
@@ -118,3 +122,6 @@ export default function AccordionBox({ status, form,updateApplicationWithdrawn }
         </div>
     );
 };
+
+
+export {DisplayContent,AccordionBox}

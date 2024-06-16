@@ -58,7 +58,7 @@ export default function WidthdrawModalBox({ isOpen, onClose, props}: ModalType) 
 
     const submitForm = async () => {
         try {
-            const isSubmit = await axios.post(import.meta.env.VITE_APPLICATION_STATUS_WITHDRAW, {
+            const isSubmit = await axios.post("http://localhost:4000/application/withdraw", {
 
                 email: props.email,
                 registerNumber: props.registerNumber
@@ -78,7 +78,7 @@ export default function WidthdrawModalBox({ isOpen, onClose, props}: ModalType) 
     return (
         <>
             <Toaster richColors position="top-center" />
-            <Modal backdrop={"opaque"} isOpen={isOpen} onClose={onClose}>
+            <Modal backdrop={"opaque"} isOpen={isOpen} onClose={onClose} placement="center">
                 <ModalContent>
                     {(onClose) => (
                         <>

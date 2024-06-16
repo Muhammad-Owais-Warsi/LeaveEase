@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import AccordionBox from "./accordian"; // Corrected the spelling here
+import { AccordionBox } from "./accordian";
 import { Spinner } from "@nextui-org/react";
 import axios from "axios";
 import { FormDataType } from "./modal";
@@ -21,7 +21,7 @@ export default function ApplicationStatus({updateApplicationWithdrawn}:Applicati
   const queryParams = new URLSearchParams(location.search);
 
   const [isData, setIsData] = useState<DataType | undefined>(undefined);
-  const [loading, setLoading] = useState<boolean>(true); // Loading state
+
   const [error, setError] = useState<string | null>(null); // Error state
 
   useEffect(() => {
@@ -31,33 +31,24 @@ export default function ApplicationStatus({updateApplicationWithdrawn}:Applicati
     if (email && registerNumber) {
       const FetchData = async () => {
         try {
-          const result = await axios.post(import.meta.env.VITE_APPLICATION_STATUS, {
+          const result = await axios.post("http://localhost:4000/application/status", {
             email,
             registerNumber
           });
           setIsData(result.data.isUser);
         } catch (err) {
-          setError("Failed to fetch data. Please try again later.");
           console.error(err);
-        } finally {
-          setLoading(false);
-        }
+        } 
       };
 
       FetchData();
     } else {
-      setLoading(false);
+   
       setError("Invalid query parameters.");
     }
   }, [location.search]);
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <Spinner size="lg" />
-      </div>
-    );
-  }
+
 
   if (error) {
     return <div className="flex justify-center items-center h-screen">{error}</div>;
