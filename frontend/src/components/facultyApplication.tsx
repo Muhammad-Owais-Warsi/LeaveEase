@@ -20,6 +20,7 @@ export default function Applications() {
   const queryParams = new URLSearchParams(location.search);
 
   const [isData, setIsData] = useState<FacultyApplicationType[]>([]);
+ 
   const [error, setError] = useState<string | null>(null);
  
 
@@ -35,6 +36,7 @@ export default function Applications() {
             section
           });
           setIsData(result.data.message);
+          
         } catch (err) {
           setError("Failed to fetch data. Please try again later.");
           console.error(err);
@@ -82,9 +84,11 @@ export default function Applications() {
     return <div className="flex justify-center items-center h-screen">{error}</div>;
   }
 
+  
+
   return (
     <>
-      {isData.length > 0 ? (
+      {isData.length > 0  ? (
         <Table aria-label="table">
           <TableHeader columns={columns}>
             {(column) => (
