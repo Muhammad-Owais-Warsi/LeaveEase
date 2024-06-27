@@ -27,7 +27,7 @@ export default function Nav({ user }: NavType) {
                     className="sm:hidden"
                 />
                 <NavbarBrand className="mr-auto">
-                    <p className="font-bold text-[rgb(255,255,255)]">SRM LEAVE PORTAL</p>
+                    <a href="/" className="font-bold text-[rgb(255,255,255)]">SRM LEAVE PORTAL</a>
                 </NavbarBrand>
             </NavbarContent>
 

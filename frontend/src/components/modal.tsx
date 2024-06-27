@@ -2,6 +2,8 @@ import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button } from
 import { Toaster, toast } from "sonner";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import LoadSpinner from "../icons/spinner";
 
 
 
@@ -42,9 +44,11 @@ export default function ModalBox({ isOpen, onClose, FormData, updateApplication 
 
   const navigate = useNavigate();
 
+  const [loading,setLoading] = useState<boolean>(false);
+
   const submit = async (event: React.FormEvent) => {
     event.preventDefault();
-    console.log(FormData);
+
 
     // Validate fields
     for (let key in FormData) {
@@ -57,18 +61,14 @@ export default function ModalBox({ isOpen, onClose, FormData, updateApplication 
 
     // Submit form
     try {
-      toast.promise(submitForm(), {
-        loading: "Submitting",
-        success: () => {
-          updateApplication();
-          navigate(`/success`);
-          return "Success";
-        },
-        error: (error) => {
-          console.error(error);
-          return 'Error';
-        },
-      });
+      setLoading(true)
+      await submitForm()
+      .then(() => {
+        setLoading(false)
+        updateApplication();
+        navigate(`/success`);
+      })
+
     } catch (error) {
       console.error("Submission failed:", error);
     }
@@ -78,7 +78,7 @@ export default function ModalBox({ isOpen, onClose, FormData, updateApplication 
 
   const submitForm = async () => {
     try {
-        const isSubmit = await axios.post(import.meta.env.VITE_APPLICATION_FORM,{
+        const isSubmit = await axios.post("http://localhost:4000/form",{
             FormData
         });
         return isSubmit;
@@ -111,7 +111,7 @@ export default function ModalBox({ isOpen, onClose, FormData, updateApplication 
                 <Button color="danger" onPress={onClose}>
                   Close
                 </Button>
-                <Button color="primary" onPress={onClose} onClick={submit}>
+                <Button color="primary" onPress={onClose} onClick={submit} isLoading={loading} spinner={<LoadSpinner/>}>
                   Confirm
                 </Button>
               </ModalFooter>

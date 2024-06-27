@@ -2,6 +2,8 @@ import { useState } from "react"
 import { toast } from "sonner";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { Button} from "@nextui-org/react";
+import LoadSpinner from "../icons/spinner";
 
 
 type StudenProps = {
@@ -13,6 +15,7 @@ export default function StudentLogin({updateStatus} : StudenProps) {
 
     const [email, setEmail] = useState<string>("");
     const [registerNumber, setRegisterNumber] = useState<string>("");
+    const [loading,setLoading] = useState<boolean>(false);
 
     const navigate = useNavigate();
 
@@ -23,27 +26,28 @@ export default function StudentLogin({updateStatus} : StudenProps) {
             return ;
         }
         event.preventDefault();
-        toast.promise(login(), {
-            loading: "Submitting",
-            success: (data) => {
-                toast.success("Logged In")
-                setEmail("");
-                setRegisterNumber("");
-                console.log(data);
-                updateStatus();
-                navigate("/leaveApplication")
-                return "Success";
-            },
-            error: (error) => {
-                console.error(error);
-                return 'Error';
-            },
+        setLoading(true);
+        setEmail("");
+        setRegisterNumber("");
+        await login()
+        .then(() => {
+            updateStatus();
+            setLoading(false);
+            navigate("/leaveApplication")
         })
+        .catch(() => {
+            toast.error("Error")
+            setLoading(false)
+            return ;
+        })
+
+
+ 
     }
 
     const login = async () => {
         try {
-            const loggedIn = await axios.post(import.meta.env.VITE_STUDENT_LOGIN, {
+            const loggedIn = await axios.post("http://localhost:4000/student/login", {
                 email,
                 registerNumber
             });
@@ -112,13 +116,16 @@ export default function StudentLogin({updateStatus} : StudenProps) {
                         </div>
 
                         <div>
-                            <button
+                            <Button
                                 type="submit"
                                 className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                                 onClick={submit}
+                                isLoading={loading}
+                                spinner={<LoadSpinner/>}
+                                
                             >
                                 Login
-                            </button>
+                            </Button>
                         </div>
                     </form>
                 </div>

@@ -3,7 +3,8 @@ import { toast, Toaster } from "sonner";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Nav from "./navbar";
-
+import { Button } from "@nextui-org/react";
+import LoadSpinner from "../icons/spinner";
 
 type FacultyAdvisorType = {
     updateFacultyAdvisorLoggedIn: () => void;
@@ -18,37 +19,37 @@ export default function FacultyAdvisorLogin({updateFacultyAdvisorLoggedIn}:Facul
     const [password, setPassowrd] = useState<string>("");
     const [department,setDepartment] = useState<string>("Cse");
     const [section,setSection] = useState<string>("A");
+    const [loading,setLoading] = useState<boolean>(false); 
 
     const navigate = useNavigate();
 
 
     const submit = async (event: React.FormEvent) => {
         event.preventDefault();
+        setLoading(true);
 
         if(!email || !password || !department || !section) {
             toast.warning("Missing Fields");
             return ;
         }
 
-        toast.promise(login(), {
-            loading: "Submitting",
-            success: () => {
-                setEmail("");
-                setPassowrd("");
-                updateFacultyAdvisorLoggedIn();
-                navigate(`/facultyAdvisor/application?department=${department}&section=${section}`)
-                return "Success";
-            },
-            error: (error) => {
-                console.error(error);
-                return 'Error';
-            },
-        })
+        try {
+            await login();
+            setEmail("");
+            setPassowrd("");
+            updateFacultyAdvisorLoggedIn();
+            setLoading(false);
+            navigate(`/facultyAdvisor/application?department=${department}&section=${section}`)
+        } catch (error) {
+            toast.error("Error");
+            return ;
+        }
+
     }
 
     const login = async () => {
         try {
-            const loggedIn = await axios.post(import.meta.env.VITE_FACULTY_ADVISOR_LOGIN, {
+            const loggedIn = await axios.post("http://localhost:4000/facultyAdvisor/login", {
                 email,
                 password,
             });
@@ -163,13 +164,15 @@ export default function FacultyAdvisorLogin({updateFacultyAdvisorLoggedIn}:Facul
                         </div>
 
                         <div>
-                            <button
+                            <Button
                                 type="submit"
                                 className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                                 onClick={submit}
+                                isLoading={loading}
+                                spinner={<LoadSpinner/>}
                             >
                                 Login
-                            </button>
+                            </Button>
                         </div>
                     </form>
                 </div>

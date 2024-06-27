@@ -2,6 +2,8 @@ import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button } from
 import { Toaster, toast } from "sonner";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import LoadSpinner from "../icons/spinner";
 
 
 
@@ -26,30 +28,22 @@ type ModalType = {
 
 export default function WidthdrawModalBox({ isOpen, onClose, props}: ModalType) {
 
-    console.log(props)
+    
 
     const navigate = useNavigate();
 
+    const [loading,setLoading] = useState<boolean>(false);
+
     const submit = async (event: React.FormEvent) => {
         event.preventDefault();
+        setLoading(true)
 
-
-
-        // Submit form
         try {
-            toast.promise(submitForm(), {
-                loading: "Submitting",
-                success: () => {
-                    props.updateApplicationWithdrawn()
-                    navigate("/application/withdrawn/success")
-                    return "Success";
-                },
-                error: (error) => {
-                    console.error(error);
-                    return 'Error';
-                },
-            });
+            await submitForm();
+            props.updateApplicationWithdrawn()
+            navigate("/application/withdrawn/success")
         } catch (error) {
+            toast.error("Error");
             console.error("Submission failed:", error);
         }
     };
@@ -58,7 +52,7 @@ export default function WidthdrawModalBox({ isOpen, onClose, props}: ModalType) 
 
     const submitForm = async () => {
         try {
-            const isSubmit = await axios.post(import.meta.env.VITE_APPLICATION_STATUS_WITHDRAW, {
+            const isSubmit = await axios.post("http://localhost:4000/application/withdraw", {
 
                 email: props.email,
                 registerNumber: props.registerNumber
@@ -94,7 +88,7 @@ export default function WidthdrawModalBox({ isOpen, onClose, props}: ModalType) 
                                 <Button color="danger" onPress={onClose}>
                                     Close
                                 </Button>
-                                <Button color="primary" onPress={onClose} onClick={submit}>
+                                <Button color="primary" onPress={onClose} onClick={submit} isLoading={loading} spinner={<LoadSpinner/>}>
                                     Confirm
                                 </Button>
                             </ModalFooter>

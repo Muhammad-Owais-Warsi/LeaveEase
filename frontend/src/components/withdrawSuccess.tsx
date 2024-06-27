@@ -40,7 +40,7 @@ const WithdrawnCard = () => {
                         Your application has been successfuly withdrawn. You can submit another leave Application
                     </p>
                 </div>
-                <div className="rounded-lg p-4 mt-4 cursor-pointer flex justify-between">
+                <div className="rounded-lg p-4 mt-4 cursor-pointer flex justify-between w-full">
                     <Button color="primary" variant="ghost" onClick={() => navigate("/")}>
                         Back Home
                     </Button>

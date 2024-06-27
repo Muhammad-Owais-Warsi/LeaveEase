@@ -31,7 +31,7 @@ export default function ApplicationStatus({updateApplicationWithdrawn}:Applicati
     if (email && registerNumber) {
       const FetchData = async () => {
         try {
-          const result = await axios.post(import.meta.env.VITE_APPLICATION_STATUS , {
+          const result = await axios.post("http://localhost:4000/application/status" , {
             email,
             registerNumber
           });

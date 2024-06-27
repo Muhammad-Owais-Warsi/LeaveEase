@@ -17,19 +17,19 @@ const storage = multer.memoryStorage();
 const upload = multer({storage:storage})
 
 
-app.use(cors({
-    origin:"https://leaveease-1.onrender.com"
-}));
+// app.use(cors({
+//     origin:"https://leaveease-1.onrender.com"
+// }));
 
 
-// app.use(cors());
+app.use(cors());
 app.use(express.json({limit:"100mb"}));
 app.use(express.urlencoded({ extended: true }));
 
 
 
-mongoose.connect(process.env.MONGO_URL);
-// mongoose.connect("mongodb://127.0.0.1:27017/development")
+// mongoose.connect(process.env.MONGO_URL);
+mongoose.connect("mongodb://127.0.0.1:27017/development")
 
 
 app.post("/student/login", async (req, res) => {

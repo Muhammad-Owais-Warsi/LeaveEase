@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { toast,Toaster } from "sonner";
 import axios from "axios";
 import Nav from "./navbar";
+import LoadSpinner from "../icons/spinner";
+import { Button } from "@nextui-org/react";
 
 
 type ApplicationStatusType = {
@@ -22,6 +24,7 @@ export default function ApplicationStatusLogin({updateApplicationStatus} : Appli
 
     const [email, setEmail] = useState<string>("");
     const [registerNumber, setRegisterNumber] = useState<string>("");
+    const [loading,setLoading] = useState<boolean>(false);
 
 
 
@@ -35,33 +38,29 @@ export default function ApplicationStatusLogin({updateApplicationStatus} : Appli
         }
     
         try {
-            toast.promise(login(), {
-                loading: "Submitting",
-                success: (response) => {
-                    const data = response.data as LoggedInDataType;
-                    setEmail("");
-                    setRegisterNumber("");
-                    updateApplicationStatus();
-                    const encodedEmail = encodeURIComponent(data.email);
-                    const encodedRegisterNumber = encodeURIComponent(data.registerNumber);
-                    toast.success("Login successful.");
-                    navigate(`/application/status?email=${encodedEmail}&registerNumber=${encodedRegisterNumber}`)
-                    return "Success";
-                },
-                error: (error) => {
-                    console.error(error);
-                    return 'Error';
-                },
-            });
+            setLoading(true);
+            const response = await login();
+            if(response) {
+                const data = response.data as LoggedInDataType
+                setEmail("");
+                setRegisterNumber("");
+                updateApplicationStatus();
+                const encodedEmail = encodeURIComponent(data.email);
+                const encodedRegisterNumber = encodeURIComponent(data.registerNumber);
+                setLoading(false);
+                navigate(`/application/status?email=${encodedEmail}&registerNumber=${encodedRegisterNumber}`)
+            }
+          
         } catch (error) {
             console.error("Submit error:", error);
             toast.error("Submit failed. Please try again later.");
+            return ;
         }
     };
     
     const login = async () => {
         try {
-            const loggedIn = await axios.post(import.meta.env.VITE_APPLICATION_STATUS_LOGIN , {
+            const loggedIn = await axios.post("http://localhost:4000/applicationStatus/login" , {
                 email,
                 registerNumber
             });
@@ -127,13 +126,16 @@ export default function ApplicationStatusLogin({updateApplicationStatus} : Appli
                         </div>
 
                         <div>
-                            <button
+                            <Button
                                 type="submit"
                                 className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                                 onClick={submit}
+                                isLoading={loading}
+                                spinner={<LoadSpinner/>}
+
                             >
                                 Login
-                            </button>
+                            </Button>
                         </div>
                     </form>
                 </div>
