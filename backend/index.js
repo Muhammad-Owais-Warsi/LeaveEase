@@ -17,64 +17,57 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage: storage })
 
 
-// app.use(cors({
-//     origin:"https://leaveease-1.onrender.com"
-// }));
+app.use(cors({
+    origin:"https://leaveease-1.onrender.com"
+}));
 
 
-app.use(cors());
+// app.use(cors());
 app.use(express.json({ limit: "100mb" }));
 app.use(express.urlencoded({ extended: true }));
 
 
 
-// mongoose.connect(process.env.MONGO_URL);
-mongoose.connect("mongodb://127.0.0.1:27017/development")
+mongoose.connect(process.env.MONGO_URL);
+// mongoose.connect("mongodb://127.0.0.1:27017/development")
 
 
 app.post("/student/login", async (req, res) => {
     const { email, registerNumber } = req.body;
-
-    const isStudent = await Student.findOne({ email, registerNumber });
-    const checkStudent = await Status.findOne({ email, registerNumber });
-
-    if (isStudent && checkStudent) {
+  
+    try {
+      const isStudent = await Student.findOne({ email, registerNumber });
+      const checkStudent = await Status.findOne({ email, registerNumber });
+  
+      if (isStudent && checkStudent) {
         res.status(500).json({ message: "User already exists" });
-    }
-    else if (isStudent && !checkStudent) {
+      } else if (isStudent && !checkStudent) {
         await Student.deleteOne({ email, registerNumber });
+  
         const newStudent = await Student.create({ email, registerNumber });
-
         if (newStudent) {
-
-            res.status(200).json({ message: "Success" });
-
+          res.status(200).json({ message: "Success" });
         } else {
-            res.status(500).json({ message: "Some Error occured" })
+          res.status(500).json({ message: "Some error occurred" });
         }
-
-    }
-    else {
-
+      } else {
         const newStudent = await Student.create({ email, registerNumber });
-
         if (newStudent) {
-            res.status(200).json({ message: "Success" });
+          res.status(200).json({ message: "Success" });
         } else {
-            res.status(500).json({ message: "Some Error occured" })
+          res.status(500).json({ message: "Some error occurred" });
         }
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal server error" });
     }
-
-
-})
+  });
+  
 
 app.post("/form", upload.single('image'), async (req, res) => {
     const { FormData } = req.body;
 
-    // const imageUrl = FormData.image;
-    // // const base64Data = imageUrl.replace(/^data:image\/\w+;base64,/, '');
-    // const imageBuffer = Buffer.from(imageUrl, "base64");
-    // FormData.image = imageBuffer;
 
     const isStudent = await Student.findOne({ email: FormData.email, registerNumber: FormData.registerNumber });
 
@@ -205,7 +198,6 @@ app.post("/facultyAdvisor/applications", async (req, res) => {
             .skip(skip)
             .limit(limit);
 
-            console.log(Users.length);
 
         const totalRecords = await FacultyAdvisor.countDocuments({department,section});
 

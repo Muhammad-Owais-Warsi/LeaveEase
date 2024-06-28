@@ -25,7 +25,7 @@ export default function FacultyAdvisorApplications() {
     if (department && section) {
       const fetchData = async () => {
         try {
-          const result = await axios.post("http://localhost:4000/facultyAdvisor/applications", {
+          const result = await axios.post(import.meta.env.VITE_FACULTY_ADVISOR_APPLICATIONS, {
             department,
             section,
             page

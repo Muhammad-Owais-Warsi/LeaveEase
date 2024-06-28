@@ -60,7 +60,7 @@ export default function ApplicationStatusLogin({updateApplicationStatus} : Appli
     
     const login = async () => {
         try {
-            const loggedIn = await axios.post("http://localhost:4000/applicationStatus/login" , {
+            const loggedIn = await axios.post(import.meta.env.VITE_APPLICATION_STATUS_LOGIN , {
                 email,
                 registerNumber
             });
