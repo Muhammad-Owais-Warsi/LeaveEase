@@ -8,7 +8,7 @@ import HeadOfDepartmentLogin from "./components/headOfDepartmentLogin";
 import ApplicationStatusLogin from "./components/applicationStatusLogin";
 import ApplicationStatus from "./components/applicationStatus";
 import WithdrawnCard from "./components/withdrawSuccess";
-import Applications from "./components/facultyApplication";
+import FacultyAdvisorApplications from "./components/facultyAdvisorApplications";
 import {NextUIProvider} from "@nextui-org/react";
 import { useState } from "react";
 
@@ -53,7 +53,7 @@ function App() {
             <Route path="/leaveApplication" element={ isStudentLoggedIn ? <Application updateApplication={updateApplication}/> : <Navigate to="/" />}></Route>
             <Route path="/success" element={isApplicationSubmitted ? <CongratsCard/> : <Navigate to="/" />}></Route>
             <Route path="/facultyAdvisor/login" element={<FacultyAdvisorLogin updateFacultyAdvisorLoggedIn={updateFacultyAdvisorLoggedIn}/>}></Route>
-            <Route path="/facultyAdvisor/application" element={isFacultyAdvisorLoggedIn ? <Applications/> : <Navigate to="/facultyAdvisor/login"/>}></Route>
+            <Route path="/facultyAdvisor/application" element={isFacultyAdvisorLoggedIn ? <FacultyAdvisorApplications/> : <Navigate to="/facultyAdvisor/login"/>}></Route>
             <Route path="/hostelCoordinator/login" element={<HostelCoordinatorLogin/>}></Route>
             <Route path="/headOfDepartment/login" element={<HeadOfDepartmentLogin/>}></Route>
             <Route path="/applicationStatus/login" element={<ApplicationStatusLogin updateApplicationStatus={updateApplicationStatus}/>}></Route>

@@ -47,7 +47,7 @@ export default function StudentLogin({updateStatus} : StudenProps) {
 
     const login = async () => {
         try {
-            const loggedIn = await axios.post("http://localhost:4000/student/login", {
+            const loggedIn = await axios.post(import.meta.env.VITE_STUDENT_LOGIN, {
                 email,
                 registerNumber
             });

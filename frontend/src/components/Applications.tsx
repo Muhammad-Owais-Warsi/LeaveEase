@@ -1,15 +1,17 @@
-import React, { useEffect, useState, useCallback } from "react";
-import { useLocation } from "react-router-dom";
+import  { useState, useCallback } from "react";
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, User, Checkbox } from "@nextui-org/react";
 import { Spinner } from "@nextui-org/react";
-import axios from "axios";
 import { FormDataType } from "./modal"; // Assuming this is where FormDataType is defined
 import { columns } from "../icons/data"; // Assuming columns is an array of objects defining the table columns
 
-type FacultyApplicationType = {
+export type FacultyApplicationType = {
   department: string,
   section: string,
   form: FormDataType
+}
+
+export type Props = {
+  data:FacultyApplicationType[]
 }
 
 type StudentSelectedType = {
@@ -18,12 +20,10 @@ type StudentSelectedType = {
   registerNumber: string
 }
 
-const Applications: React.FC = () => {
-  const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
+function Applications({data}:Props){
 
-  const [isData, setIsData] = useState<FacultyApplicationType[]>([]);
-  const [error, setError] = useState<string | null>(null);
+
+
   const [studentSelected, setStudentSelected] = useState<StudentSelectedType[]>([]);
 
   const generateKey = (email: string, registerNumber: string) => `${email}-${registerNumber}`;
@@ -45,30 +45,6 @@ const Applications: React.FC = () => {
       ]);
     }
   }
-
-  useEffect(() => {
-    const department = queryParams.get("department");
-    const section = queryParams.get("section");
-
-    if (department && section) {
-      const fetchData = async () => {
-        try {
-          const result = await axios.post("http://localhost:4000/facultyAdvisor/applications", {
-            department,
-            section
-          });
-          setIsData(result.data.message);
-        } catch (err) {
-          setError("Failed to fetch data. Please try again later.");
-          console.error(err);
-        }
-      };
-
-      fetchData();
-    } else {
-      setError("Invalid query parameters.");
-    }
-  }, [location.search]);
 
   console.log(studentSelected)
 
@@ -95,8 +71,13 @@ const Applications: React.FC = () => {
           </div>
         );
       case "email":
-      case "department":
-      case "section":
+      case "parentPhone":
+        return (
+          <div className="flex flex-col">
+            <p className="text-bold text-sm">{user.form.parentPhoneNumber}</p>
+          </div>
+        );
+
       case "reason":
         return (
           <div className="flex flex-col">
@@ -108,13 +89,11 @@ const Applications: React.FC = () => {
     }
   }, [studentSelected]);
 
-  if (error) {
-    return <div className="flex justify-center items-center h-screen">{error}</div>;
-  }
+
 
   return (
     <>
-      {isData.length > 0 ? (
+      {data.length > 0 ? (
         <Table aria-label="table">
           <TableHeader columns={columns}>
             {(column) => (
@@ -123,8 +102,8 @@ const Applications: React.FC = () => {
               </TableColumn>
             )}
           </TableHeader>
-          <TableBody items={isData}>
-            {isData.map((item,idx) => (
+          <TableBody items={data}>
+            {data.map((item,idx) => (
               <TableRow key={idx}>
                 {columns.map((column) => (
                   <TableCell key={column.uid} className="align-middle p-4">

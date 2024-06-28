@@ -14,7 +14,7 @@ dotenv.config();
 
 const app = express();
 const storage = multer.memoryStorage();
-const upload = multer({storage:storage})
+const upload = multer({ storage: storage })
 
 
 // app.use(cors({
@@ -23,7 +23,7 @@ const upload = multer({storage:storage})
 
 
 app.use(cors());
-app.use(express.json({limit:"100mb"}));
+app.use(express.json({ limit: "100mb" }));
 app.use(express.urlencoded({ extended: true }));
 
 
@@ -68,7 +68,7 @@ app.post("/student/login", async (req, res) => {
 
 })
 
-app.post("/form",upload.single('image') ,async (req, res) => {
+app.post("/form", upload.single('image'), async (req, res) => {
     const { FormData } = req.body;
 
     // const imageUrl = FormData.image;
@@ -119,19 +119,19 @@ app.post("/application/status", async (req, res) => {
         const { email, registerNumber } = req.body;
         const isUser = await Status.findOne({ email, registerNumber });
 
-        if(isUser) {
-        
+        if (isUser) {
+
             // const imageBuffer = isUser.form.image;
             // const base64Image = imageBuffer.toString('base64');
             // isUser.form.image = base64Image;
-          
-            res.status(200).json({isUser});
-        } 
+
+            res.status(200).json({ isUser });
+        }
         else {
-            res.status(404).json({message:"Not Found"});
+            res.status(404).json({ message: "Not Found" });
         }
     } catch (error) {
-        res.status(500).json({message:"Error"});
+        res.status(500).json({ message: "Error" });
     }
 
 
@@ -149,10 +149,10 @@ app.post("/application/withdraw", async (req, res) => {
             if (userStatus && userStatus.status === 1) {
                 const checkUser = await FacultyAdvisor.findOne({ studentId: isUser._id });
                 if (checkUser) {
-                    await FacultyAdvisor.deleteOne({studentId:isUser._id})
+                    await FacultyAdvisor.deleteOne({ studentId: isUser._id })
                     await Status.deleteOne({ email, registerNumber });
                     await Student.deleteOne({ email, registerNumber });
-                    applicationWithdrawnMail(email,registerNumber);
+                    applicationWithdrawnMail(email, registerNumber);
                     console.log("Records deleted successfully");
                 }
                 res.status(200).json({ message: "Success" });
@@ -174,35 +174,47 @@ app.post("/application/withdraw", async (req, res) => {
 
 
 
-app.post("/facultyAdvisor/login", async (req,res) => {
+app.post("/facultyAdvisor/login", async (req, res) => {
 
     try {
-        const {email,password} = req.body;
+        const { email, password } = req.body;
 
-        if(email === process.env.FACULTY_ADVISOR_EMAIL && password === process.env.FACULTY_ADVISOR_PASSWORD) {
-            res.status(200).json({message:"Success"});
-        } 
+        if (email === process.env.FACULTY_ADVISOR_EMAIL && password === process.env.FACULTY_ADVISOR_PASSWORD) {
+            res.status(200).json({ message: "Success" });
+        }
         else {
-            res.status(500).json({message:"Error"})
+            res.status(500).json({ message: "Error" })
         }
     } catch (error) {
-        res.status(500).json({message:"Error"});
+        res.status(500).json({ message: "Error" });
     }
 
 
 });
 
 
-app.post("/facultyAdvisor/applications", async (req,res) => {
-    const {department,section} = req.body;
+app.post("/facultyAdvisor/applications", async (req, res) => {
+    const { department, section, page } = req.body;
 
-    const Users = await FacultyAdvisor.find({department,section})
+    const limit = 2;
+    const skip = (page - 1) * limit;
 
-    if(Users) {
-        res.status(200).json({message:Users});
-    } else {
-        res.status(500).json({message:"Error"})
+    try {
+        const Users = await FacultyAdvisor
+            .find({ department, section })  // Filter records by department and section
+            .skip(skip)
+            .limit(limit);
+
+            console.log(Users.length);
+
+        const totalRecords = await FacultyAdvisor.countDocuments({department,section});
+
+        res.json({ message:Users,total:totalRecords });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Internal server error" });
     }
+
 })
 
 

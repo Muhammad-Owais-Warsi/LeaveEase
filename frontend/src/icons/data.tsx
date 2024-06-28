@@ -15,8 +15,7 @@ const columns= [
   {uid:"radio"},
   {name: "NAME",uid:"name"},
   {name:"EMAIL",uid:"email"},
-  {name:"DEPARTMENT",uid:"department"},
-  {name:"SECTION",uid:"section"},
+  {name:"PARENT PHONE NUMBER",uid:"parentPhone"},
   {name:"REASON",uid:"reason"},
   
  
