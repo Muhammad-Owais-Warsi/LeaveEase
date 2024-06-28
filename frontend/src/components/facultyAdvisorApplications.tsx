@@ -32,7 +32,7 @@ export default function FacultyAdvisorApplications() {
 
           });
           setIsData(result.data.message);
-          setTotalRecord(result.data.total / 2);
+          setTotalRecord(result.data.total%2 ===0 ? result.data.total / 2 : (result.data.total/2)+1);
           
 
         } catch (err) {
